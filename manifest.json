@@ -1,0 +1,19 @@
+{
+  "name": "Gym Tracker",
+  "short_name": "Gym",
+  "description": "Трекер тренировок",
+  "start_url": "/training_tracker/",
+  "scope": "/training_tracker/",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#0f0f0f",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

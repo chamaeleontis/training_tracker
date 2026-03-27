@@ -6,13 +6,16 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Gym Tracker</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<meta name="theme-color" content="#0c0c0c">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#0f0f0f;--card:#1a1a1a;--card2:#222;--card3:#2a2a2a;
-  --accent:#e8ff47;--accent2:#ff6b35;--purple:#a78bfa;
-  --text:#f0f0f0;--muted:#777;--border:#2e2e2e;
-  --green:#4ade80;--red:#f87171;--blue:#60a5fa;
+  --bg:#0c0c0c;--card:#141414;--card2:#1c1c1c;--card3:#242424;
+  --accent:#93c5fd;--accent2:#c4b5fd;--teal:#5eead4;--slate:#94a3b8;
+  --text:#e8e8e8;--muted:#505050;--border:#222;
+  --green:#86efac;--red:#fca5a5;--blue:#7dd3fc;
 }
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
 input[type=number]{-moz-appearance:textfield}
@@ -26,13 +29,13 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 
 /* PHASE BANNER */
 .phase-banner{margin:12px 16px 0;border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
-.phase-strength{background:#e8ff4712;border:1px solid #e8ff4730}
-.phase-hypertrophy{background:#ff6b3512;border:1px solid #ff6b3530}
-.phase-deload{background:#60a5fa12;border:1px solid #60a5fa30}
+.phase-strength{background:#93c5fd0d;border:1px solid #93c5fd25}
+.phase-hypertrophy{background:#c4b5fd0d;border:1px solid #c4b5fd25}
+.phase-deload{background:#94a3b80d;border:1px solid #94a3b825}
 .phase-type{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
 .phase-strength .phase-type{color:var(--accent)}
 .phase-hypertrophy .phase-type{color:var(--accent2)}
-.phase-deload .phase-type{color:var(--blue)}
+.phase-deload .phase-type{color:var(--slate)}
 .phase-week{font-size:11px;color:var(--muted)}
 .phase-reps{font-size:13px;font-weight:700;text-align:right}
 .phase-change{font-size:11px;color:var(--muted);text-align:right;margin-top:1px}
@@ -58,15 +61,15 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 /* TODAY */
 .day-selector{display:flex;gap:6px;margin-top:12px}
 .day-sel-btn{flex:1;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
-.day-sel-btn.active-a{background:#e8ff4720;border-color:#e8ff4750;color:var(--accent)}
-.day-sel-btn.active-b{background:#ff6b3520;border-color:#ff6b3550;color:var(--accent2)}
-.day-sel-btn.active-c{background:#7c3aed20;border-color:#7c3aed50;color:var(--purple)}
-.day-sel-btn.active-d{background:#0ea5e920;border-color:#0ea5e950;color:#38bdf8}
+.day-sel-btn.active-a{background:#93c5fd15;border-color:#93c5fd40;color:var(--accent)}
+.day-sel-btn.active-b{background:#c4b5fd15;border-color:#c4b5fd40;color:var(--accent2)}
+.day-sel-btn.active-c{background:#5eead415;border-color:#5eead440;color:var(--teal)}
+.day-sel-btn.active-d{background:#94a3b815;border-color:#94a3b840;color:var(--slate)}
 .day-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:4px 10px;border-radius:20px;margin-bottom:10px;margin-top:12px}
-.badge-a{background:#e8ff4720;color:var(--accent)}
-.badge-b{background:#ff6b3520;color:var(--accent2)}
-.badge-c{background:#7c3aed20;color:var(--purple)}
-.badge-d{background:#0ea5e920;color:#38bdf8}
+.badge-a{background:#93c5fd15;color:var(--accent)}
+.badge-b{background:#c4b5fd15;color:var(--accent2)}
+.badge-c{background:#5eead415;color:var(--teal)}
+.badge-d{background:#94a3b815;color:var(--slate)}
 .workout-title{font-size:21px;font-weight:800;margin-bottom:3px}
 .workout-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
 
@@ -82,8 +85,8 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .chevron{font-size:11px;color:var(--muted);transition:transform .2s}
 .chevron.open{transform:rotate(180deg)}
 .exercise-tag{font-size:9px;padding:2px 5px;border-radius:5px;font-weight:700;white-space:nowrap}
-.tag-caution{background:#ff6b3520;color:var(--accent2)}
-.tag-rehab{background:#4ade8020;color:var(--green)}
+.tag-caution{background:#fca5a515;color:var(--red)}
+.tag-rehab{background:#86efac15;color:var(--green)}
 
 /* SETS */
 .exercise-body{padding:0 14px 14px;border-top:1px solid var(--border);display:none}
@@ -97,21 +100,21 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .set-done{width:30px;height:30px;border-radius:8px;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;margin:0 auto}
 .set-done.checked{background:var(--green);border-color:var(--green)}
 .add-set-btn{width:100%;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);padding:7px;margin-top:6px;cursor:pointer;font-size:12px}
-.note-box{background:#e8ff4708;border-left:2px solid #e8ff4740;border-radius:0 8px 8px 0;padding:7px 10px;font-size:11px;color:#aaa;margin-top:8px;line-height:1.6}
-.note-box.note-caution{background:#ff6b3508;border-left-color:#ff6b3540}
-.note-box.note-rehab{background:#4ade8008;border-left-color:#4ade8040}
+.note-box{background:#93c5fd08;border-left:2px solid #93c5fd30;border-radius:0 8px 8px 0;padding:7px 10px;font-size:11px;color:#888;margin-top:8px;line-height:1.6}
+.note-box.note-caution{background:#fca5a508;border-left-color:#fca5a530}
+.note-box.note-rehab{background:#86efac08;border-left-color:#86efac30}
 
-.finish-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px}
+.finish-btn{width:100%;background:var(--accent);color:#0a0f1a;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px}
 .finish-btn:active{opacity:.85}
 
 /* PROGRAM PAGE */
 .program-day{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden}
 .program-day-header{padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
 .day-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
-.circ-a{background:#e8ff4720;color:var(--accent)}
-.circ-b{background:#ff6b3520;color:var(--accent2)}
-.circ-c{background:#7c3aed20;color:var(--purple)}
-.circ-d{background:#0ea5e920;color:#38bdf8}
+.circ-a{background:#93c5fd15;color:var(--accent)}
+.circ-b{background:#c4b5fd15;color:var(--accent2)}
+.circ-c{background:#5eead415;color:var(--teal)}
+.circ-d{background:#94a3b815;color:var(--slate)}
 .program-day-body{padding:0 14px 14px;border-top:1px solid var(--border);display:none}
 .program-day-body.open{display:block}
 .prog-ex{padding:9px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
@@ -126,9 +129,9 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .history-item{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px}
 .history-date{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:6px}
 .history-phase-badge{font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700}
-.badge-strength{background:#e8ff4720;color:var(--accent)}
-.badge-hypertrophy{background:#ff6b3520;color:var(--accent2)}
-.badge-deload{background:#60a5fa20;color:var(--blue)}
+.badge-strength{background:#93c5fd15;color:var(--accent)}
+.badge-hypertrophy{background:#c4b5fd15;color:var(--accent2)}
+.badge-deload{background:#94a3b815;color:var(--slate)}
 .history-title{font-weight:700;font-size:15px;margin-bottom:8px}
 .history-stats{display:flex;gap:14px;flex-wrap:wrap}
 .history-stat{font-size:12px;color:var(--muted)}
@@ -161,15 +164,15 @@ canvas{width:100%!important;display:block}
 /* SWAP MODAL */
 .swap-option{padding:13px 14px;border-radius:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--card2)}
 .swap-option:active{background:var(--card3)}
-.swap-option.selected{background:#e8ff4715;border:1px solid #e8ff4740}
+.swap-option.selected{background:#93c5fd10;border:1px solid #93c5fd35}
 .swap-option-name{font-size:14px;font-weight:500}
 .swap-option-tag{font-size:10px}
 .swap-check{font-size:16px;color:var(--accent)}
 
 /* PHASE MODAL */
 .phase-option{padding:13px 14px;border-radius:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--card2)}
-.phase-option.selected-strength{background:#e8ff4715;border:1px solid #e8ff4730}
-.phase-option.selected-hypertrophy{background:#ff6b3515;border:1px solid #ff6b3530}
+.phase-option.selected-strength{background:#93c5fd10;border:1px solid #93c5fd30}
+.phase-option.selected-hypertrophy{background:#c4b5fd10;border:1px solid #c4b5fd30}
 .phase-option:active{background:var(--card3)}
 .phase-opt-title{font-size:14px;font-weight:700}
 .phase-opt-sub{font-size:11px;color:var(--muted);margin-top:2px}
@@ -180,7 +183,7 @@ canvas{width:100%!important;display:block}
 /* CONFIRM MODAL */
 .confirm-text{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6}
 .confirm-btns{display:flex;gap:8px}
-.confirm-yes{flex:1;background:var(--accent2);border:none;color:#fff;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer}
+.confirm-yes{flex:1;background:var(--red);border:none;color:#0c0c0c;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer}
 .confirm-no{flex:1;background:var(--card2);border:none;color:var(--text);padding:12px;border-radius:12px;font-size:14px;cursor:pointer}
 </style>
 </head>
@@ -1063,8 +1066,8 @@ function renderChart() {
 
   // gradient
   const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + gH);
-  grad.addColorStop(0, 'rgba(232,255,71,.25)');
-  grad.addColorStop(1, 'rgba(232,255,71,0)');
+  grad.addColorStop(0, 'rgba(147,197,253,.2)');
+  grad.addColorStop(1, 'rgba(147,197,253,0)');
   ctx.beginPath();
   ctx.moveTo(px(0), py(points[0].weight));
   points.forEach((p, i) => { if (i > 0) ctx.lineTo(px(i), py(p.weight)); });
@@ -1078,7 +1081,7 @@ function renderChart() {
   ctx.beginPath();
   ctx.moveTo(px(0), py(points[0].weight));
   points.forEach((p, i) => { if (i > 0) ctx.lineTo(px(i), py(p.weight)); });
-  ctx.strokeStyle = '#e8ff47';
+  ctx.strokeStyle = '#93c5fd';
   ctx.lineWidth = 2;
   ctx.stroke();
 
@@ -1086,7 +1089,7 @@ function renderChart() {
   points.forEach((p, i) => {
     ctx.beginPath();
     ctx.arc(px(i), py(p.weight), 3.5, 0, Math.PI*2);
-    ctx.fillStyle = p.phase === 'strength' ? '#e8ff47' : p.phase === 'deload' ? '#60a5fa' : '#ff6b35';
+    ctx.fillStyle = p.phase === 'strength' ? '#93c5fd' : p.phase === 'deload' ? '#94a3b8' : '#c4b5fd';
     ctx.fill();
   });
 
@@ -1109,6 +1112,10 @@ function renderChart() {
 // ════════════════════════════════════════════════════════
 initToday();
 renderProgram();
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/training_tracker/sw.js');
+}
 </script>
 </body>
 </html>
