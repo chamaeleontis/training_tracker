@@ -7,125 +7,175 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Gym Tracker</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  :root {
-    --bg: #0f0f0f;
-    --card: #1a1a1a;
-    --card2: #222;
-    --accent: #e8ff47;
-    --accent2: #ff6b35;
-    --text: #f0f0f0;
-    --muted: #888;
-    --border: #333;
-    --green: #4ade80;
-    --red: #f87171;
-  }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f0f0f;--card:#1a1a1a;--card2:#222;--card3:#2a2a2a;
+  --accent:#e8ff47;--accent2:#ff6b35;--purple:#a78bfa;
+  --text:#f0f0f0;--muted:#777;--border:#2e2e2e;
+  --green:#4ade80;--red:#f87171;--blue:#60a5fa;
+}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
+input[type=number]{-moz-appearance:textfield}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 
-  /* HEADER */
-  .header { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); padding: 14px 16px 10px; display: flex; align-items: center; justify-content: space-between; }
-  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .header-right { display: flex; gap: 8px; }
-  .icon-btn { background: var(--card2); border: none; color: var(--text); width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; }
+/* HEADER */
+.header{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.header-right{display:flex;gap:8px}
+.icon-btn{background:var(--card2);border:none;color:var(--text);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer}
 
-  /* NAV */
-  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 1px solid var(--border); display: flex; z-index: 100; }
-  .nav-btn { flex: 1; padding: 10px 4px 14px; background: none; border: none; color: var(--muted); font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; transition: color .2s; }
-  .nav-btn.active { color: var(--accent); }
-  .nav-btn svg { width: 22px; height: 22px; }
+/* PHASE BANNER */
+.phase-banner{margin:12px 16px 0;border-radius:14px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.phase-strength{background:#e8ff4712;border:1px solid #e8ff4730}
+.phase-hypertrophy{background:#ff6b3512;border:1px solid #ff6b3530}
+.phase-deload{background:#60a5fa12;border:1px solid #60a5fa30}
+.phase-type{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
+.phase-strength .phase-type{color:var(--accent)}
+.phase-hypertrophy .phase-type{color:var(--accent2)}
+.phase-deload .phase-type{color:var(--blue)}
+.phase-week{font-size:11px;color:var(--muted)}
+.phase-reps{font-size:13px;font-weight:700;text-align:right}
+.phase-change{font-size:11px;color:var(--muted);text-align:right;margin-top:1px}
 
-  /* PAGES */
-  .page { display: none; padding: 16px 16px 90px; }
-  .page.active { display: block; }
+/* TIMER */
+.timer-bar{position:fixed;top:57px;left:0;right:0;z-index:99;background:var(--card);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;transform:translateY(-100%);transition:transform .3s}
+.timer-bar.visible{transform:translateY(0)}
+.timer-label{font-size:11px;color:var(--muted)}
+.timer-count{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--accent)}
+.timer-stop{background:var(--card3);border:none;color:var(--text);padding:6px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px}
 
-  /* CARDS */
-  .card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
-  .card-sm { background: var(--card2); border-radius: 12px; padding: 12px; margin-bottom: 8px; }
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:1px solid var(--border);display:flex;z-index:100}
+.nav-btn{flex:1;padding:9px 4px 14px;background:none;border:none;color:var(--muted);font-size:10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-btn svg{width:21px;height:21px}
 
-  /* TODAY PAGE */
-  .day-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #000; font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px; }
-  .workout-title { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-  .workout-sub { color: var(--muted); font-size: 13px; margin-bottom: 20px; }
-  .exercise-card { background: var(--card); border-radius: 16px; margin-bottom: 10px; overflow: hidden; }
-  .exercise-header { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-  .exercise-name { font-weight: 600; font-size: 15px; }
-  .exercise-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .exercise-tag { font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 600; }
-  .tag-caution { background: #ff6b3520; color: var(--accent2); }
-  .tag-rehab { background: #4ade8020; color: var(--green); }
-  .exercise-body { padding: 0 16px 16px; border-top: 1px solid var(--border); display: none; }
-  .exercise-body.open { display: block; }
-  .sets-header { display: grid; grid-template-columns: 30px 1fr 1fr 40px; gap: 8px; color: var(--muted); font-size: 11px; padding: 10px 0 6px; text-align: center; }
-  .set-row { display: grid; grid-template-columns: 30px 1fr 1fr 40px; gap: 8px; align-items: center; margin-bottom: 6px; }
-  .set-num { color: var(--muted); font-size: 13px; text-align: center; font-weight: 600; }
-  .set-input { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px; padding: 8px; text-align: center; width: 100%; -webkit-appearance: none; }
-  .set-input:focus { outline: none; border-color: var(--accent); }
-  .set-done { width: 32px; height: 32px; border-radius: 8px; border: 2px solid var(--border); background: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all .15s; }
-  .set-done.checked { background: var(--green); border-color: var(--green); }
-  .add-set-btn { width: 100%; background: var(--card2); border: 1px dashed var(--border); border-radius: 8px; color: var(--muted); padding: 8px; margin-top: 8px; cursor: pointer; font-size: 13px; }
-  .note { background: #e8ff4710; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 8px 10px; font-size: 12px; color: #ccc; margin-top: 10px; line-height: 1.5; }
+/* PAGES */
+.page{display:none;padding:12px 16px 90px}
+.page.active{display:block}
+.section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:4px}
 
-  /* TIMER */
-  .timer-bar { position: fixed; top: 60px; left: 0; right: 0; z-index: 99; background: var(--card); border-bottom: 1px solid var(--border); padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; transform: translateY(-100%); transition: transform .3s; }
-  .timer-bar.visible { transform: translateY(0); }
-  .timer-label { font-size: 12px; color: var(--muted); }
-  .timer-count { font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
-  .timer-stop { background: var(--accent2); border: none; color: #fff; padding: 6px 14px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; }
+/* TODAY */
+.day-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:4px 10px;border-radius:20px;margin-bottom:10px;margin-top:12px}
+.badge-a{background:#e8ff4720;color:var(--accent)}
+.badge-b{background:#ff6b3520;color:var(--accent2)}
+.badge-c{background:#7c3aed20;color:var(--purple)}
+.badge-d{background:#0ea5e920;color:#38bdf8}
+.workout-title{font-size:21px;font-weight:800;margin-bottom:3px}
+.workout-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
 
-  /* FINISH BTN */
-  .finish-btn { width: 100%; background: var(--accent); color: #000; border: none; border-radius: 16px; padding: 16px; font-size: 16px; font-weight: 800; cursor: pointer; margin-top: 16px; }
-  .finish-btn:active { opacity: 0.85; }
+/* EXERCISE CARD */
+.exercise-card{background:var(--card);border-radius:14px;margin-bottom:8px;overflow:hidden}
+.exercise-header{padding:13px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:8px}
+.exercise-header-left{flex:1;min-width:0}
+.exercise-name{font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.exercise-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.exercise-header-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.swap-btn{background:var(--card2);border:1px solid var(--border);color:var(--muted);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;flex-shrink:0}
+.swap-btn:active{background:var(--card3)}
+.chevron{font-size:11px;color:var(--muted);transition:transform .2s}
+.chevron.open{transform:rotate(180deg)}
+.exercise-tag{font-size:9px;padding:2px 5px;border-radius:5px;font-weight:700;white-space:nowrap}
+.tag-caution{background:#ff6b3520;color:var(--accent2)}
+.tag-rehab{background:#4ade8020;color:var(--green)}
 
-  /* HISTORY PAGE */
-  .history-item { background: var(--card); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
-  .history-date { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-  .history-title { font-weight: 700; font-size: 16px; margin-bottom: 8px; }
-  .history-stats { display: flex; gap: 16px; }
-  .history-stat { font-size: 12px; color: var(--muted); }
-  .history-stat span { color: var(--text); font-weight: 600; }
-  .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
-  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+/* SETS */
+.exercise-body{padding:0 14px 14px;border-top:1px solid var(--border);display:none}
+.exercise-body.open{display:block}
+.sets-header{display:grid;grid-template-columns:24px 1fr 1fr 34px;gap:6px;color:var(--muted);font-size:10px;padding:10px 0 6px;text-align:center}
+.set-row{display:grid;grid-template-columns:24px 1fr 1fr 34px;gap:6px;align-items:center;margin-bottom:6px}
+.set-num{color:var(--muted);font-size:12px;text-align:center;font-weight:600}
+.set-input{background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:15px;padding:7px 4px;text-align:center;width:100%;-webkit-appearance:none}
+.set-input:focus{outline:none;border-color:var(--accent)}
+.set-input.no-weight{opacity:.3;pointer-events:none}
+.set-done{width:30px;height:30px;border-radius:8px;border:2px solid var(--border);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s;margin:0 auto}
+.set-done.checked{background:var(--green);border-color:var(--green)}
+.add-set-btn{width:100%;background:transparent;border:1px dashed var(--border);border-radius:8px;color:var(--muted);padding:7px;margin-top:6px;cursor:pointer;font-size:12px}
+.note-box{background:#e8ff4708;border-left:2px solid #e8ff4740;border-radius:0 8px 8px 0;padding:7px 10px;font-size:11px;color:#aaa;margin-top:8px;line-height:1.6}
+.note-box.note-caution{background:#ff6b3508;border-left-color:#ff6b3540}
+.note-box.note-rehab{background:#4ade8008;border-left-color:#4ade8040}
 
-  /* PROGRAM PAGE */
-  .program-day { background: var(--card); border-radius: 16px; margin-bottom: 12px; overflow: hidden; }
-  .program-day-header { padding: 14px 16px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-  .day-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; flex-shrink: 0; }
-  .day-a { background: #e8ff4720; color: var(--accent); }
-  .day-b { background: #ff6b3520; color: var(--accent2); }
-  .day-c { background: #7c3aed20; color: #a78bfa; }
-  .program-day-body { padding: 0 16px 16px; border-top: 1px solid var(--border); display: none; }
-  .program-day-body.open { display: block; }
-  .prog-exercise { padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; }
-  .prog-exercise:last-child { border-bottom: none; }
-  .prog-ex-name { font-size: 14px; font-weight: 500; }
-  .prog-ex-sets { font-size: 12px; color: var(--muted); margin-top: 2px; }
-  .prog-ex-right { text-align: right; }
+.finish-btn{width:100%;background:var(--accent);color:#000;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;margin-top:14px}
+.finish-btn:active{opacity:.85}
 
-  /* PROGRESS PAGE */
-  .progress-select { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; font-size: 14px; width: 100%; margin-bottom: 16px; }
-  .progress-chart { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
-  .chart-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
-  canvas { width: 100% !important; display: block; }
-  .pr-badge { background: #e8ff4715; border: 1px solid var(--accent); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-  .pr-name { font-size: 14px; font-weight: 600; }
-  .pr-weight { font-size: 20px; font-weight: 800; color: var(--accent); }
-  .pr-date { font-size: 11px; color: var(--muted); }
+/* PROGRAM PAGE */
+.program-day{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden}
+.program-day-header{padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.day-circle{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+.circ-a{background:#e8ff4720;color:var(--accent)}
+.circ-b{background:#ff6b3520;color:var(--accent2)}
+.circ-c{background:#7c3aed20;color:var(--purple)}
+.circ-d{background:#0ea5e920;color:#38bdf8}
+.program-day-body{padding:0 14px 14px;border-top:1px solid var(--border);display:none}
+.program-day-body.open{display:block}
+.prog-ex{padding:9px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start}
+.prog-ex:last-child{border-bottom:none}
+.prog-ex-name{font-size:13px;font-weight:500}
+.prog-ex-alt{font-size:11px;color:var(--muted);margin-top:2px}
+.prog-ex-sets{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;margin-left:8px}
+.info-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;font-size:13px;color:var(--muted);line-height:1.7}
+.info-card b{color:var(--text)}
 
-  /* TOGGLE CHEVRON */
-  .chevron { transition: transform .2s; font-size: 12px; color: var(--muted); }
-  .chevron.open { transform: rotate(180deg); }
+/* HISTORY */
+.history-item{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px}
+.history-date{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:6px}
+.history-phase-badge{font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700}
+.badge-strength{background:#e8ff4720;color:var(--accent)}
+.badge-hypertrophy{background:#ff6b3520;color:var(--accent2)}
+.badge-deload{background:#60a5fa20;color:var(--blue)}
+.history-title{font-weight:700;font-size:15px;margin-bottom:8px}
+.history-stats{display:flex;gap:14px;flex-wrap:wrap}
+.history-stat{font-size:12px;color:var(--muted)}
+.history-stat span{color:var(--text);font-weight:600}
+.history-actions{display:flex;gap:8px;margin-bottom:16px}
+.action-btn{flex:1;background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.action-btn:active{background:var(--card2)}
+.empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-state .emoji{font-size:44px;margin-bottom:10px}
 
-  /* SECTION TITLE */
-  .section-title { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; margin-top: 4px; }
+/* PROGRESS */
+.progress-select{background:var(--card);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-size:14px;width:100%;margin-bottom:14px}
+.pr-badge{background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.pr-name{font-size:14px;font-weight:600}
+.pr-weight{font-size:22px;font-weight:800;color:var(--accent)}
+.pr-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.chart-card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px}
+canvas{width:100%!important;display:block}
 
-  /* MODAL */
-  .modal-overlay { position: fixed; inset: 0; background: #000a; z-index: 200; display: none; align-items: flex-end; justify-content: center; }
-  .modal-overlay.open { display: flex; }
-  .modal { background: var(--card); border-radius: 24px 24px 0 0; padding: 20px; width: 100%; max-width: 480px; }
-  .modal h2 { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
-  .modal-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-  .modal-row span:last-child { font-weight: 600; color: var(--accent); }
-  .modal-close { width: 100%; background: var(--card2); border: none; color: var(--text); padding: 14px; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 10px; }
+/* MODALS */
+.modal-overlay{position:fixed;inset:0;background:#000b;z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:22px 22px 0 0;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.modal h2{font-size:18px;font-weight:800;margin-bottom:14px}
+.modal-close{width:100%;background:var(--card2);border:none;color:var(--text);padding:13px;border-radius:12px;font-size:14px;cursor:pointer;margin-top:8px}
+.modal-close:active{background:var(--card3)}
+.modal-row{display:flex;justify-content:space-between;margin-bottom:9px;font-size:14px}
+.modal-row span:last-child{font-weight:700;color:var(--accent)}
+
+/* SWAP MODAL */
+.swap-option{padding:13px 14px;border-radius:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--card2)}
+.swap-option:active{background:var(--card3)}
+.swap-option.selected{background:#e8ff4715;border:1px solid #e8ff4740}
+.swap-option-name{font-size:14px;font-weight:500}
+.swap-option-tag{font-size:10px}
+.swap-check{font-size:16px;color:var(--accent)}
+
+/* PHASE MODAL */
+.phase-option{padding:13px 14px;border-radius:12px;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--card2)}
+.phase-option.selected-strength{background:#e8ff4715;border:1px solid #e8ff4730}
+.phase-option.selected-hypertrophy{background:#ff6b3515;border:1px solid #ff6b3530}
+.phase-option:active{background:var(--card3)}
+.phase-opt-title{font-size:14px;font-weight:700}
+.phase-opt-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.week-row{display:flex;align-items:center;gap:12px;margin:12px 0}
+.week-btn{width:36px;height:36px;border-radius:10px;background:var(--card2);border:none;color:var(--text);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.week-display{flex:1;text-align:center;font-size:15px;font-weight:700}
+
+/* CONFIRM MODAL */
+.confirm-text{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.confirm-btns{display:flex;gap:8px}
+.confirm-yes{flex:1;background:var(--accent2);border:none;color:#fff;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer}
+.confirm-no{flex:1;background:var(--card2);border:none;color:var(--text);padding:12px;border-radius:12px;font-size:14px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -133,13 +183,13 @@
 <div class="header">
   <h1>💪 Gym Tracker</h1>
   <div class="header-right">
-    <button class="icon-btn" id="timerToggleBtn" onclick="toggleTimerStart()">⏱</button>
+    <button class="icon-btn" onclick="toggleManualTimer()">⏱</button>
   </div>
 </div>
 
 <div class="timer-bar" id="timerBar">
   <div>
-    <div class="timer-label">Отдых между подходами</div>
+    <div class="timer-label">Отдых</div>
     <div class="timer-count" id="timerCount">0:00</div>
   </div>
   <button class="timer-stop" onclick="stopTimer()">Стоп</button>
@@ -152,23 +202,16 @@
 
 <!-- PROGRAM -->
 <div class="page" id="page-program">
-  <div class="section-title">Программа тренировок</div>
   <div id="program-content"></div>
-  <div class="card" style="font-size:13px; color: var(--muted); line-height: 1.7;">
-    <b style="color:var(--text)">Прогрессия нагрузки:</b><br>
-    Силовые (4×5, 5×3): +2.5 кг когда выполнены все повторы<br>
-    Объёмные (3×8–12): добавляй вес когда берёшь верхнюю границу<br>
-    Каждые 4 недели — разгрузочная неделя (−30% веса)
-  </div>
-  <div class="card" style="font-size:13px; color: var(--muted); line-height: 1.7;">
-    <b style="color: var(--accent2)">⚠ Локоть:</b> избегай полного разгибания под нагрузкой, не делай французский жим, используй нейтральный хват где возможно<br><br>
-    <b style="color: var(--green)">✓ Таз:</b> Dead Bug, ягодичный мостик и болгарский присед помогают выравниванию. Не перегружай одностороннее
-  </div>
 </div>
 
 <!-- HISTORY -->
 <div class="page" id="page-history">
-  <div class="section-title">История тренировок</div>
+  <div class="history-actions">
+    <button class="action-btn" onclick="exportJSON()">📤 Экспорт</button>
+    <button class="action-btn" onclick="document.getElementById('importInput').click()">📥 Импорт</button>
+  </div>
+  <input type="file" id="importInput" accept=".json" style="display:none" onchange="handleImport(event)">
   <div id="history-content"></div>
 </div>
 
@@ -176,14 +219,13 @@
 <div class="page" id="page-progress">
   <div class="section-title">Личные рекорды</div>
   <div id="pr-content"></div>
-  <div class="section-title" style="margin-top:8px">График прогресса</div>
+  <div class="section-title" style="margin-top:10px">График</div>
   <select class="progress-select" id="progressSelect" onchange="renderChart()"></select>
-  <div class="progress-chart">
+  <div class="chart-card">
     <canvas id="progressCanvas" height="180"></canvas>
   </div>
 </div>
 
-<!-- NAV -->
 <nav class="nav">
   <button class="nav-btn active" onclick="showPage('today',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
@@ -206,248 +248,395 @@
 <!-- FINISH MODAL -->
 <div class="modal-overlay" id="finishModal">
   <div class="modal">
-    <h2>🎉 Тренировка завершена!</h2>
+    <h2>🎉 Готово!</h2>
     <div id="finish-stats"></div>
-    <button class="modal-close" onclick="closeModal()">Закрыть</button>
+    <button class="modal-close" onclick="closeFinishModal()">Закрыть</button>
+  </div>
+</div>
+
+<!-- SWAP MODAL -->
+<div class="modal-overlay" id="swapModal">
+  <div class="modal">
+    <h2>Выбрать упражнение</h2>
+    <div id="swap-options"></div>
+    <button class="modal-close" onclick="closeModal('swapModal')">Отмена</button>
+  </div>
+</div>
+
+<!-- PHASE MODAL -->
+<div class="modal-overlay" id="phaseModal">
+  <div class="modal">
+    <h2>Настройка блока</h2>
+    <div id="phase-modal-content"></div>
+    <button class="modal-close" onclick="closeModal('phaseModal')">Готово</button>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <h2 id="confirm-title"></h2>
+    <div class="confirm-text" id="confirm-text"></div>
+    <div class="confirm-btns">
+      <button class="confirm-yes" id="confirm-yes">Да</button>
+      <button class="confirm-no" onclick="closeModal('confirmModal')">Отмена</button>
+    </div>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // PROGRAM DATA
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// reps = hypertrophy / repsS = strength (omit if same)
+// noWeight = true for bodyweight/timed exercises
+// alternatives = [{name, tag?, note?}]
+
 const PROGRAM = [
   {
-    id: 'A',
-    name: 'День A — Ноги + Кор',
-    focus: 'Сила нижней части, коррекция таза',
-    color: 'day-a',
+    id: 'A', name: 'День A — Ноги + Кор',
+    focus: 'Сила ног, коррекция таза',
+    badgeClass: 'badge-a', circClass: 'circ-a',
     exercises: [
-      { name: 'Приседания со штангой', sets: 4, reps: '5', rest: 180, note: 'Следи за нейтральным положением таза. Не заваливайся вперёд.' },
-      { name: 'Румынская тяга', sets: 3, reps: '8', rest: 120, note: 'Мягкий сгиб в колене, тянись ягодицами назад. Контроль поясницы.' },
-      { name: 'Ягодичный мостик (штанга)', sets: 3, reps: '12', rest: 90, note: 'Ключевое упражнение для выравнивания таза. Сожми ягодицы в верхней точке на 2 сек.', tag: 'rehab' },
-      { name: 'Жим ногами', sets: 3, reps: '10', rest: 90, note: 'Стопы на ширине плеч. Не перегружай поясницу — не скручивай таз в нижней точке.' },
-      { name: 'Dead Bug', sets: 3, reps: '10 (на сторону)', rest: 60, note: 'Медленно. Поясница прижата к полу всё время. Отличная профилактика перекоса.', tag: 'rehab' },
-      { name: 'Планка', sets: 3, reps: '45 сек', rest: 60, note: 'Не прогибай поясницу. Лучше короче, но идеально.' },
+      { name: 'Приседания со штангой', sets: 4, reps: '6–8', repsS: '4–5', rest: 180,
+        note: 'Следи за нейтральным положением таза. Не заваливайся вперёд.', alternatives: [] },
+      { name: 'Румынская тяга', sets: 3, reps: '8–10', repsS: '5–6', rest: 150,
+        note: 'Тянись ягодицами назад, нейтральный позвоночник. Контроль поясницы.', tag: 'rehab', alternatives: [] },
+      { name: 'Сгибания ног в тренажёре', sets: 3, reps: '10–12', rest: 90, alternatives: [] },
+      { name: 'Разгибания ног', sets: 3, reps: '12–15', rest: 90,
+        note: 'Не разгибай полностью под нагрузкой.', alternatives: [] },
+      { name: 'Dead Bug', sets: 3, reps: '10 (каждую сторону)', rest: 60, noWeight: true,
+        note: 'Поясница прижата к полу всё время. Медленно и осознанно.', tag: 'rehab', alternatives: [] },
+      { name: 'Планка', sets: 3, reps: '45–60 сек', rest: 60, noWeight: true,
+        note: 'Не прогибай поясницу. Лучше короче, но с идеальной техникой.', alternatives: [] },
     ]
   },
   {
-    id: 'B',
-    name: 'День B — Верх тела',
-    focus: 'Жим, тяги, плечи',
-    color: 'day-b',
+    id: 'B', name: 'День B — Грудь + Плечи + Трицепс',
+    focus: 'Жим, изоляция, кор',
+    badgeClass: 'badge-b', circClass: 'circ-b',
     exercises: [
-      { name: 'Жим штанги лёжа', sets: 4, reps: '5', rest: 180, note: 'Хват чуть шире плеч. Следи чтобы локти не уходили за 75° — щадит локтевой сустав.', tag: 'caution' },
-      { name: 'Тяга штанги в наклоне', sets: 4, reps: '6', rest: 150, note: 'Нейтральный позвоночник. Тяни к животу, не к груди.' },
-      { name: 'Жим гантелей сидя', sets: 3, reps: '10', rest: 90, note: 'Гантели лучше штанги для локтя — естественная траектория. Не выпрямляй руки полностью.', tag: 'caution' },
-      { name: 'Тяга верхнего блока', sets: 3, reps: '10', rest: 90, note: 'Нейтральный или обратный хват — меньше нагрузки на локоть.' },
-      { name: 'Face Pull', sets: 3, reps: '15', rest: 60, note: 'Здоровье плеч и ротаторных манжет. Тяни к лицу, локти выше плеч.', tag: 'rehab' },
-      { name: 'Трицепс на блоке (верёвка)', sets: 3, reps: '12', rest: 60, note: 'Только блок, не французский жим — береги локоть. Полный диапазон без боли.', tag: 'caution' },
+      { name: 'Жим штанги лёжа', sets: 4, reps: '6–8', repsS: '4–5', rest: 180,
+        note: 'Хват чуть шире плеч. Локти не шире 75° — щадит локтевой сустав.', tag: 'caution', alternatives: [] },
+      { name: 'Сведения в блоке (верх груди)', sets: 3, reps: '12–15', rest: 90, alternatives: [] },
+      { name: 'Махи в стороны', sets: 3, reps: '12–15', rest: 60,
+        alternatives: [
+          { name: 'Махи в кроссовере (одна рука)' },
+          { name: 'Бабочка в тренажёре' },
+        ]},
+      { name: 'Трицепс на блоке (верёвка)', sets: 3, reps: '12–15', rest: 60,
+        note: 'Не разгибай локоть полностью под нагрузкой.', tag: 'caution',
+        alternatives: [
+          { name: 'Французский жим в блоке', tag: 'caution', note: 'Аккуратно с локтем в нижней точке.' },
+          { name: 'Французский жим свободный', tag: 'caution', note: 'Максимальная нагрузка на локоть — только если нет дискомфорта.' },
+        ]},
+      { name: 'Ролик (ab wheel)', sets: 3, reps: '8–10', rest: 60, noWeight: true,
+        note: 'Поясница нейтральная. Можно с колен пока нет уверенной формы.', alternatives: [] },
+      { name: 'Скручивания', sets: 3, reps: '15–20', rest: 60, noWeight: true, alternatives: [] },
     ]
   },
   {
-    id: 'C',
-    name: 'День C — Тяга + Сплит',
-    focus: 'Максимальная сила, односторонняя работа',
-    color: 'day-c',
+    id: 'C', name: 'День C — Спина + Бицепс + Плечи',
+    focus: 'Тяги, ширина и толщина спины',
+    badgeClass: 'badge-c', circClass: 'circ-c',
     exercises: [
-      { name: 'Становая тяга', sets: 4, reps: '4', rest: 210, note: 'Главное упражнение дня. Нейтральный позвоночник, лопатки сведены. Не рви с пола.' },
-      { name: 'Подтягивания / Тяга к поясу', sets: 4, reps: '6', rest: 150, note: 'Нейтральный хват предпочтителен для локтя. Полная амплитуда.', tag: 'caution' },
-      { name: 'Болгарский присед', sets: 3, reps: '8 (на ногу)', rest: 120, note: 'Ключевое для таза! Выравнивает дисбаланс между ногами. Следи чтобы колено не завалилось внутрь.', tag: 'rehab' },
-      { name: 'Жим гантелей на наклонной', sets: 3, reps: '10', rest: 90, note: 'Угол 30°. Нейтральный хват или пронация — как удобнее локтю.', tag: 'caution' },
-      { name: 'Скручивания на ролике (ab wheel)', sets: 3, reps: '8', rest: 60, note: 'Медленно. Не прогибай поясницу. Можно с колен пока не будет хорошей формы.' },
+      { name: 'Подтягивания', sets: 4, reps: '6–8', repsS: '5–6', rest: 180,
+        note: 'Нейтральный хват предпочтителен для локтя. Полная амплитуда.', tag: 'caution', alternatives: [] },
+      { name: 'Тяга Т-грифа', sets: 4, reps: '8', repsS: '5–6', rest: 150,
+        note: 'Нейтральный позвоночник, тяни к животу.',
+        alternatives: [
+          { name: 'Хаммер (тяга)' },
+          { name: 'Тяга штанги в наклоне' },
+        ]},
+      { name: 'Пуловер', sets: 3, reps: '12', rest: 90,
+        note: 'Растяжение широчайших. Контроль на всей амплитуде.',
+        alternatives: [
+          { name: 'Тяга горизонтального блока к центру', note: 'Локти ведёшь строго назад, акцент на середину спины.' },
+        ]},
+      { name: 'Жим в тренажёре на плечи', sets: 3, reps: '10–12', repsS: '6–8', rest: 120,
+        alternatives: [
+          { name: 'Армейский жим стоя' },
+          { name: 'Жим в Смите сидя' },
+        ]},
+      { name: 'Сгибания на бицепс', sets: 3, reps: '10–12', rest: 90, alternatives: [] },
+      { name: 'Hanging leg raise', sets: 3, reps: '10–12', rest: 60, noWeight: true,
+        alternatives: [
+          { name: 'Планка', noWeight: true },
+        ]},
     ]
-  }
+  },
+  {
+    id: 'D', name: 'День D — Руки + Плечи',
+    focus: 'Опциональный день',
+    badgeClass: 'badge-d', circClass: 'circ-d',
+    optional: true,
+    exercises: [
+      { name: 'Жим в тренажёре на плечи', sets: 4, reps: '10–12', repsS: '6–8', rest: 120,
+        alternatives: [
+          { name: 'Армейский жим стоя' },
+          { name: 'Жим в Смите сидя' },
+        ]},
+      { name: 'Махи в стороны', sets: 3, reps: '12–15', rest: 60,
+        alternatives: [
+          { name: 'Махи в кроссовере (одна рука)' },
+          { name: 'Бабочка в тренажёре' },
+        ]},
+      { name: 'Face Pull (задний пучок)', sets: 3, reps: '15', rest: 60,
+        note: 'Локти выше плеч, тяни к лицу. Здоровье ротаторов.', tag: 'rehab', alternatives: [] },
+      { name: 'Сгибания на бицепс', sets: 3, reps: '10–12', rest: 90, alternatives: [] },
+      { name: 'Молотки (Hammer curls)', sets: 3, reps: '10–12', rest: 90, alternatives: [] },
+      { name: 'Трицепс на блоке (верёвка)', sets: 3, reps: '12–15', rest: 60,
+        tag: 'caution', note: 'Не разгибай локоть полностью.',
+        alternatives: [
+          { name: 'Французский жим в блоке', tag: 'caution' },
+          { name: 'Французский жим свободный', tag: 'caution', note: 'Только если нет дискомфорта в локте.' },
+        ]},
+    ]
+  },
 ];
 
-// ══════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════
-let state = {
-  currentSets: {},   // exerciseName -> [{weight, reps, done}]
-  workoutStartTime: null,
-  currentDayIdx: 0,
+// ════════════════════════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════════════════════════
+const $ = id => document.getElementById(id);
+function gls(key, def) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch { return def; } }
+function sls(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
+
+function getHistory() { return gls('gym_history', []); }
+function saveHistory(h) { sls('gym_history', h); }
+function getPRs() { return gls('gym_prs', {}); }
+function savePRs(p) { sls('gym_prs', p); }
+function getNextDay() { return gls('gym_next_day', 0); }
+function setNextDay(i) { sls('gym_next_day', i); }
+function getPhase() {
+  return gls('gym_phase', { type: 'hypertrophy', blockStart: new Date().toISOString().split('T')[0] });
+}
+function savePhase(p) { sls('gym_phase', p); }
+
+function getPhaseInfo() {
+  const p = getPhase();
+  const start = new Date(p.blockStart);
+  const now = new Date();
+  const weekNum = Math.floor((now - start) / (7 * 24 * 3600 * 1000)) + 1;
+  const isDeload = weekNum >= 5;
+  return { type: p.type, blockStart: p.blockStart, weekNum: Math.min(weekNum, 5), isDeload };
+}
+
+// ════════════════════════════════════════════════════════
+// SESSION STATE
+// ════════════════════════════════════════════════════════
+let session = {
+  dayIdx: 0,
+  sets: {},          // exSlotKey -> [{weight, reps, done}]
+  selections: {},    // exIdx -> altIdx (0=main, 1+=alt)
+  startTime: null,
 };
 
-function getStorage(key, def) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch { return def; }
+function exSlotKey(exIdx) { return `${session.dayIdx}_${exIdx}`; }
+
+function getSelectedEx(exIdx) {
+  const ex = PROGRAM[session.dayIdx].exercises[exIdx];
+  const sel = session.selections[exIdx] || 0;
+  if (sel === 0) return ex;
+  const alt = ex.alternatives[sel - 1];
+  return { ...ex, ...alt, name: alt.name };
 }
-function setStorage(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch {} }
 
-function getHistory() { return getStorage('gym_history', []); }
-function saveHistory(h) { setStorage('gym_history', h); }
-function getNextDayIdx() { return getStorage('gym_next_day', 0); }
-function setNextDayIdx(i) { setStorage('gym_next_day', i); }
-
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // NAVIGATION
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
+  $('page-' + name).classList.add('active');
   btn.classList.add('active');
   if (name === 'history') renderHistory();
   if (name === 'progress') renderProgress();
 }
 
-// ══════════════════════════════════════════════
-// TODAY PAGE
-// ══════════════════════════════════════════════
-function initToday() {
-  const idx = getNextDayIdx();
-  state.currentDayIdx = idx;
-  const day = PROGRAM[idx];
-  state.currentSets = {};
-  day.exercises.forEach(ex => {
-    state.currentSets[ex.name] = Array.from({length: ex.sets}, () => ({weight: '', reps: ex.reps, done: false}));
-  });
+function closeModal(id) { $(id).classList.remove('open'); }
 
+// ════════════════════════════════════════════════════════
+// TODAY PAGE
+// ════════════════════════════════════════════════════════
+function initToday() {
+  session.dayIdx = getNextDay();
+  session.selections = {};
+  session.sets = {};
+  session.startTime = Date.now();
+
+  const day = PROGRAM[session.dayIdx];
+  day.exercises.forEach((ex, i) => {
+    session.sets[exSlotKey(i)] = Array.from({ length: ex.sets }, () =>
+      ({ weight: '', reps: '', done: false }));
+  });
+  renderToday();
+}
+
+function renderToday() {
+  const day = PROGRAM[session.dayIdx];
+  const phase = getPhaseInfo();
   const now = new Date();
-  const days = ['Воскресенье','Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
-  const months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+  const DAYS = ['вс','пн','вт','ср','чт','пт','сб'];
+  const MONTHS = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+
+  let phaseClass = phase.isDeload ? 'phase-deload' : (phase.type === 'strength' ? 'phase-strength' : 'phase-hypertrophy');
+  let phaseName = phase.isDeload ? 'РАЗГРУЗОЧНАЯ НЕДЕЛЯ' : (phase.type === 'strength' ? 'СИЛОВОЙ БЛОК' : 'ГИПЕРТРОФИЯ');
+  let phaseReps = phase.isDeload ? '−30% от рабочих весов' : (phase.type === 'strength' ? 'Целевые: 4–6 повт' : 'Целевые: 8–12 повт');
 
   let html = `
-    <div class="day-badge">
-      <span>${day.id}</span>
-      <span>${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}</span>
+    <div class="phase-banner ${phaseClass}" onclick="openPhaseModal()">
+      <div>
+        <div class="phase-type">${phaseName}</div>
+        <div class="phase-week">Неделя ${phase.weekNum} · нажми чтобы изменить</div>
+      </div>
+      <div>
+        <div class="phase-reps">${phaseReps}</div>
+      </div>
     </div>
+    <div class="${day.badgeClass} day-badge">${day.id} · ${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]}</div>
     <div class="workout-title">${day.name}</div>
-    <div class="workout-sub">${day.focus}</div>
+    <div class="workout-sub">${day.focus}${day.optional ? ' (опциональный)' : ''}</div>
   `;
 
-  day.exercises.forEach((ex, i) => {
-    const tagHtml = ex.tag === 'caution'
-      ? '<span class="exercise-tag tag-caution">⚠ Локоть</span>'
-      : ex.tag === 'rehab'
-      ? '<span class="exercise-tag tag-rehab">✓ Таз</span>'
-      : '';
-
-    html += `
-      <div class="exercise-card" id="excard-${i}">
-        <div class="exercise-header" onclick="toggleExercise(${i})">
-          <div>
-            <div class="exercise-name">${ex.name} ${tagHtml}</div>
-            <div class="exercise-meta">${ex.sets} подхода × ${ex.reps} повт · отдых ${formatTime(ex.rest)}</div>
-          </div>
-          <span class="chevron" id="chev-${i}">▼</span>
-        </div>
-        <div class="exercise-body" id="exbody-${i}">
-          <div class="sets-header"><span>#</span><span>Вес (кг)</span><span>Повт</span><span>✓</span></div>
-          <div id="sets-${i}"></div>
-          <button class="add-set-btn" onclick="addSet(${i})">+ подход</button>
-          ${ex.note ? `<div class="note">${ex.note}</div>` : ''}
-        </div>
-      </div>
-    `;
+  day.exercises.forEach((_, i) => {
+    html += buildExerciseCard(i);
   });
 
   html += `<button class="finish-btn" onclick="finishWorkout()">Завершить тренировку 🏁</button>`;
-  document.getElementById('today-content').innerHTML = html;
+  $('today-content').innerHTML = html;
+}
 
-  // render initial sets
-  day.exercises.forEach((ex, i) => renderSets(i));
+function buildExerciseCard(exIdx) {
+  const ex = getSelectedEx(exIdx);
+  const phase = getPhaseInfo();
+  const hasAlts = PROGRAM[session.dayIdx].exercises[exIdx].alternatives.length > 0;
+  const reps = (phase.type === 'strength' && !phase.isDeload && ex.repsS) ? ex.repsS : ex.reps;
+  const displayReps = phase.isDeload ? ex.reps : reps;
 
-  state.workoutStartTime = Date.now();
+  const tagHtml = ex.tag === 'caution'
+    ? '<span class="exercise-tag tag-caution">⚠ локоть</span>'
+    : ex.tag === 'rehab' ? '<span class="exercise-tag tag-rehab">✓ таз</span>' : '';
+
+  const swapHtml = hasAlts
+    ? `<button class="swap-btn" onclick="event.stopPropagation();openSwapModal(${exIdx})">⇄</button>` : '';
+
+  return `
+    <div class="exercise-card" id="excard-${exIdx}">
+      <div class="exercise-header" onclick="toggleEx(${exIdx})">
+        <div class="exercise-header-left">
+          <div class="exercise-name">${ex.name} ${tagHtml}</div>
+          <div class="exercise-meta">${ex.sets} × ${displayReps} · ${fmtTime(ex.rest)}</div>
+        </div>
+        <div class="exercise-header-right">
+          ${swapHtml}
+          <span class="chevron" id="chev-${exIdx}">▼</span>
+        </div>
+      </div>
+      <div class="exercise-body" id="exbody-${exIdx}">
+        <div class="sets-header"><span>#</span><span>Вес кг</span><span>Повт</span><span>✓</span></div>
+        <div id="sets-${exIdx}"></div>
+        <button class="add-set-btn" onclick="addSet(${exIdx})">+ подход</button>
+        ${ex.note ? `<div class="note-box${ex.tag === 'caution' ? ' note-caution' : ex.tag === 'rehab' ? ' note-rehab' : ''}">${ex.note}</div>` : ''}
+      </div>
+    </div>`;
 }
 
 function renderSets(exIdx) {
-  const ex = PROGRAM[state.currentDayIdx].exercises[exIdx];
-  const sets = state.currentSets[ex.name];
+  const ex = getSelectedEx(exIdx);
+  const sets = session.sets[exSlotKey(exIdx)];
+  const phase = getPhaseInfo();
+  const reps = (phase.type === 'strength' && !phase.isDeload && ex.repsS) ? ex.repsS : ex.reps;
   let html = '';
   sets.forEach((s, si) => {
+    const wClass = ex.noWeight ? 'no-weight' : '';
     html += `
       <div class="set-row">
-        <span class="set-num">${si+1}</span>
-        <input class="set-input" type="number" inputmode="decimal" placeholder="—" value="${s.weight}"
-          onchange="updateSet(${exIdx},${si},'weight',this.value)">
-        <input class="set-input" type="number" inputmode="numeric" placeholder="${ex.reps}" value="${s.reps !== ex.reps ? s.reps : ''}"
-          onchange="updateSet(${exIdx},${si},'reps',this.value)" placeholder="${ex.reps}">
-        <button class="set-done ${s.done ? 'checked' : ''}" onclick="toggleDone(${exIdx},${si})">
-          ${s.done ? '✓' : ''}
-        </button>
-      </div>
-    `;
+        <span class="set-num">${si + 1}</span>
+        <input class="set-input ${wClass}" type="number" inputmode="decimal" placeholder="${ex.noWeight ? '—' : '0'}"
+          value="${s.weight}" onchange="updSet(${exIdx},${si},'weight',this.value)">
+        <input class="set-input" type="number" inputmode="numeric" placeholder="${reps}"
+          value="${s.reps}" onchange="updSet(${exIdx},${si},'reps',this.value)">
+        <button class="set-done ${s.done ? 'checked' : ''}" onclick="toggleDone(${exIdx},${si})">${s.done ? '✓' : ''}</button>
+      </div>`;
   });
-  document.getElementById('sets-' + exIdx).innerHTML = html;
+  $('sets-' + exIdx).innerHTML = html;
 }
 
-function updateSet(exIdx, setIdx, field, value) {
-  const exName = PROGRAM[state.currentDayIdx].exercises[exIdx].name;
-  state.currentSets[exName][setIdx][field] = value;
+function updSet(exIdx, si, field, val) {
+  session.sets[exSlotKey(exIdx)][si][field] = val;
 }
 
-function toggleDone(exIdx, setIdx) {
-  const exName = PROGRAM[state.currentDayIdx].exercises[exIdx].name;
-  const set = state.currentSets[exName][setIdx];
+function toggleDone(exIdx, si) {
+  const set = session.sets[exSlotKey(exIdx)][si];
   set.done = !set.done;
-  if (set.done) startRestTimer(PROGRAM[state.currentDayIdx].exercises[exIdx].rest);
+  if (set.done) startRestTimer(getSelectedEx(exIdx).rest);
   renderSets(exIdx);
 }
 
 function addSet(exIdx) {
-  const ex = PROGRAM[state.currentDayIdx].exercises[exIdx];
-  state.currentSets[ex.name].push({weight: '', reps: ex.reps, done: false});
+  const ex = getSelectedEx(exIdx);
+  session.sets[exSlotKey(exIdx)].push({ weight: '', reps: '', done: false });
   renderSets(exIdx);
 }
 
-function toggleExercise(i) {
-  const body = document.getElementById('exbody-' + i);
-  const chev = document.getElementById('chev-' + i);
-  const isOpen = body.classList.contains('open');
-  body.classList.toggle('open', !isOpen);
-  chev.classList.toggle('open', !isOpen);
+function toggleEx(i) {
+  const body = $('exbody-' + i);
+  const chev = $('chev-' + i);
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+  if (open) renderSets(i);
 }
 
 function finishWorkout() {
-  const day = PROGRAM[state.currentDayIdx];
-  const duration = Math.round((Date.now() - state.workoutStartTime) / 60000);
-  let totalSets = 0, totalWeight = 0;
+  const day = PROGRAM[session.dayIdx];
+  const phase = getPhaseInfo();
+  const duration = Math.round((Date.now() - session.startTime) / 60000);
+  let totalSets = 0, totalVol = 0;
 
-  const exercisesLog = day.exercises.map(ex => {
-    const sets = state.currentSets[ex.name].filter(s => s.done);
-    totalSets += sets.length;
-    sets.forEach(s => { totalWeight += (parseFloat(s.weight) || 0) * (parseInt(s.reps) || 0); });
-    return { name: ex.name, sets: sets };
+  const exercisesLog = day.exercises.map((_, i) => {
+    const ex = getSelectedEx(i);
+    const doneSets = session.sets[exSlotKey(i)].filter(s => s.done);
+    totalSets += doneSets.length;
+    doneSets.forEach(s => { totalVol += (parseFloat(s.weight) || 0) * (parseInt(s.reps) || 0); });
+    return { name: ex.name, sets: doneSets };
   });
 
   const entry = {
     date: new Date().toISOString(),
     dayId: day.id,
     dayName: day.name,
+    phase: phase.isDeload ? 'deload' : phase.type,
+    phaseWeek: phase.weekNum,
     duration,
     totalSets,
-    totalWeight: Math.round(totalWeight),
-    exercises: exercisesLog
+    totalVol: Math.round(totalVol),
+    exercises: exercisesLog,
   };
 
   const history = getHistory();
   history.unshift(entry);
   saveHistory(history);
-
-  // update PRs
   updatePRs(exercisesLog);
+  setNextDay((session.dayIdx + 1) % 4);
 
-  // next day
-  setNextDayIdx((state.currentDayIdx + 1) % 3);
-
-  // show modal
-  document.getElementById('finish-stats').innerHTML = `
+  const nextDay = PROGRAM[(session.dayIdx + 1) % 4];
+  $('finish-stats').innerHTML = `
     <div class="modal-row"><span>Длительность</span><span>${duration} мин</span></div>
-    <div class="modal-row"><span>Подходов выполнено</span><span>${totalSets}</span></div>
-    <div class="modal-row"><span>Общий объём</span><span>${totalWeight} кг</span></div>
-    <div class="modal-row"><span>Следующая тренировка</span><span>День ${PROGRAM[(state.currentDayIdx + 1) % 3].id}</span></div>
+    <div class="modal-row"><span>Подходов</span><span>${totalSets}</span></div>
+    <div class="modal-row"><span>Объём</span><span>${totalVol.toLocaleString('ru')} кг</span></div>
+    <div class="modal-row"><span>Следующий день</span><span>${nextDay.id} — ${nextDay.id === 'D' ? 'опц.' : ''}</span></div>
   `;
-  document.getElementById('finishModal').classList.add('open');
+  $('finishModal').classList.add('open');
 }
 
-function closeModal() {
-  document.getElementById('finishModal').classList.remove('open');
+function closeFinishModal() {
+  closeModal('finishModal');
   initToday();
 }
 
 function updatePRs(exercisesLog) {
-  const prs = getStorage('gym_prs', {});
+  const prs = getPRs();
   exercisesLog.forEach(ex => {
     ex.sets.forEach(s => {
       const w = parseFloat(s.weight) || 0;
@@ -456,214 +645,392 @@ function updatePRs(exercisesLog) {
       }
     });
   });
-  setStorage('gym_prs', prs);
+  savePRs(prs);
 }
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// SWAP MODAL
+// ════════════════════════════════════════════════════════
+let swapTargetIdx = -1;
+
+function openSwapModal(exIdx) {
+  swapTargetIdx = exIdx;
+  const baseEx = PROGRAM[session.dayIdx].exercises[exIdx];
+  const currentSel = session.selections[exIdx] || 0;
+  const options = [{ name: baseEx.name, tag: baseEx.tag, note: null }, ...baseEx.alternatives];
+
+  let html = '';
+  options.forEach((opt, i) => {
+    const tagHtml = opt.tag === 'caution'
+      ? '<span class="exercise-tag tag-caution">⚠ локоть</span>'
+      : opt.tag === 'rehab' ? '<span class="exercise-tag tag-rehab">✓ таз</span>' : '';
+    const checkHtml = i === currentSel ? '<span class="swap-check">✓</span>' : '';
+    html += `
+      <div class="swap-option ${i === currentSel ? 'selected' : ''}" onclick="selectAlt(${i})">
+        <div>
+          <div class="swap-option-name">${opt.name} ${tagHtml}</div>
+          ${opt.note ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">${opt.note}</div>` : ''}
+        </div>
+        ${checkHtml}
+      </div>`;
+  });
+  $('swap-options').innerHTML = html;
+  $('swapModal').classList.add('open');
+}
+
+function selectAlt(altIdx) {
+  session.selections[swapTargetIdx] = altIdx;
+  closeModal('swapModal');
+  // Rebuild the card
+  const card = $('excard-' + swapTargetIdx);
+  const wasOpen = $('exbody-' + swapTargetIdx).classList.contains('open');
+  card.outerHTML = buildExerciseCard(swapTargetIdx);
+  if (wasOpen) {
+    $('exbody-' + swapTargetIdx).classList.add('open');
+    $('chev-' + swapTargetIdx).classList.add('open');
+    renderSets(swapTargetIdx);
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// PHASE MODAL
+// ════════════════════════════════════════════════════════
+function openPhaseModal() {
+  renderPhaseModal();
+  $('phaseModal').classList.add('open');
+}
+
+function renderPhaseModal() {
+  const phase = getPhase();
+  const info = getPhaseInfo();
+
+  const opts = [
+    { type: 'strength', title: 'Силовой блок', sub: '3–6 повторений · тяжёлые веса · 4–6 нед' },
+    { type: 'hypertrophy', title: 'Гипертрофия', sub: '8–12 повторений · умеренные веса · 4–6 нед' },
+  ];
+
+  let html = '';
+  opts.forEach(o => {
+    const sel = phase.type === o.type ? (o.type === 'strength' ? 'selected-strength' : 'selected-hypertrophy') : '';
+    html += `
+      <div class="phase-option ${sel}" onclick="setPhaseType('${o.type}')">
+        <div>
+          <div class="phase-opt-title">${o.title}</div>
+          <div class="phase-opt-sub">${o.sub}</div>
+        </div>
+        ${phase.type === o.type ? '<span style="color:var(--accent);font-size:18px">✓</span>' : ''}
+      </div>`;
+  });
+
+  html += `
+    <div style="font-size:12px;color:var(--muted);margin:14px 0 6px">Неделя блока (авто + ручная коррекция)</div>
+    <div class="week-row">
+      <button class="week-btn" onclick="adjustWeek(-1)">−</button>
+      <div class="week-display">Неделя ${info.weekNum}${info.isDeload ? ' · разгрузка' : ' из 4'}</div>
+      <button class="week-btn" onclick="adjustWeek(1)">+</button>
+    </div>
+    <button style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--muted);padding:10px;border-radius:10px;font-size:13px;cursor:pointer;margin-top:4px" onclick="startNewBlock()">
+      Начать новый блок (сброс недели)
+    </button>`;
+
+  $('phase-modal-content').innerHTML = html;
+}
+
+function setPhaseType(type) {
+  const p = getPhase();
+  p.type = type;
+  savePhase(p);
+  renderPhaseModal();
+  renderToday();
+}
+
+function adjustWeek(delta) {
+  const p = getPhase();
+  const info = getPhaseInfo();
+  const newWeek = Math.max(1, Math.min(5, info.weekNum + delta));
+  // Adjust blockStart so that current week = newWeek
+  const start = new Date();
+  start.setDate(start.getDate() - (newWeek - 1) * 7);
+  p.blockStart = start.toISOString().split('T')[0];
+  savePhase(p);
+  renderPhaseModal();
+  renderToday();
+}
+
+function startNewBlock() {
+  const p = getPhase();
+  p.blockStart = new Date().toISOString().split('T')[0];
+  savePhase(p);
+  renderPhaseModal();
+  renderToday();
+}
+
+// ════════════════════════════════════════════════════════
 // TIMER
-// ══════════════════════════════════════════════
-let timerInterval = null;
-let timerSeconds = 0;
-let timerRunning = false;
+// ════════════════════════════════════════════════════════
+let timerInterval = null, timerSec = 0, timerRunning = false;
 
 function startRestTimer(seconds) {
-  timerSeconds = seconds;
-  showTimer();
-  clearInterval(timerInterval);
+  timerSec = seconds;
   timerRunning = true;
+  $('timerBar').classList.add('visible');
+  clearInterval(timerInterval);
+  updateTimerDisplay();
   timerInterval = setInterval(() => {
-    timerSeconds--;
+    timerSec--;
     updateTimerDisplay();
-    if (timerSeconds <= 0) {
-      stopTimer();
-      vibrate();
-    }
+    if (timerSec === 0) { if (navigator.vibrate) navigator.vibrate([200,100,200]); }
+    if (timerSec < -60) stopTimer();
   }, 1000);
 }
 
-function toggleTimerStart() {
-  if (timerRunning) stopTimer();
-  else startRestTimer(120);
+function toggleManualTimer() {
+  timerRunning ? stopTimer() : startRestTimer(120);
 }
 
 function stopTimer() {
   clearInterval(timerInterval);
   timerRunning = false;
-  document.getElementById('timerBar').classList.remove('visible');
+  $('timerBar').classList.remove('visible');
 }
-
-function showTimer() { document.getElementById('timerBar').classList.add('visible'); }
 
 function updateTimerDisplay() {
-  const m = Math.floor(Math.abs(timerSeconds) / 60);
-  const s = Math.abs(timerSeconds) % 60;
-  const sign = timerSeconds < 0 ? '+' : '';
-  document.getElementById('timerCount').textContent = `${sign}${m}:${s.toString().padStart(2,'0')}`;
-  document.getElementById('timerCount').style.color = timerSeconds < 0 ? 'var(--accent2)' : 'var(--accent)';
-  if (timerSeconds < 0) timerSeconds--; // keep counting over
+  const abs = Math.abs(timerSec);
+  const m = Math.floor(abs / 60), s = abs % 60;
+  const sign = timerSec < 0 ? '+' : '';
+  $('timerCount').textContent = `${sign}${m}:${s.toString().padStart(2, '0')}`;
+  $('timerCount').style.color = timerSec < 0 ? 'var(--accent2)' : 'var(--accent)';
 }
 
-function formatTime(s) { return s >= 60 ? `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')} мин` : `${s} сек`; }
-function vibrate() { if (navigator.vibrate) navigator.vibrate([200, 100, 200]); }
+function fmtTime(s) { return s >= 60 ? `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}` : `${s}с`; }
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // PROGRAM PAGE
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function renderProgram() {
   let html = '';
   PROGRAM.forEach((day, di) => {
     html += `
       <div class="program-day">
         <div class="program-day-header" onclick="toggleProgDay(${di})">
-          <div class="day-circle ${day.color}">${day.id}</div>
-          <div>
-            <div style="font-weight:700;font-size:15px">${day.name}</div>
+          <div class="day-circle ${day.circClass}">${day.id}</div>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:14px">${day.name}${day.optional ? ' <span style="color:var(--muted);font-weight:400;font-size:12px">(опц.)</span>' : ''}</div>
             <div style="font-size:12px;color:var(--muted)">${day.focus}</div>
           </div>
-          <span class="chevron" id="progchev-${di}" style="margin-left:auto">▼</span>
+          <span class="chevron" id="progchev-${di}">▼</span>
         </div>
-        <div class="program-day-body" id="progbody-${di}">
-    `;
+        <div class="program-day-body" id="progbody-${di}">`;
+
     day.exercises.forEach(ex => {
       const tagHtml = ex.tag === 'caution'
-        ? '<span class="exercise-tag tag-caution" style="font-size:9px">⚠ Локоть</span>'
-        : ex.tag === 'rehab'
-        ? '<span class="exercise-tag tag-rehab" style="font-size:9px">✓ Таз</span>'
-        : '';
+        ? '<span class="exercise-tag tag-caution" style="font-size:9px">⚠</span>'
+        : ex.tag === 'rehab' ? '<span class="exercise-tag tag-rehab" style="font-size:9px">✓</span>' : '';
+      const altsHtml = ex.alternatives.length
+        ? `<div class="prog-ex-alt">⇄ ${ex.alternatives.map(a => a.name).join(' · ')}</div>` : '';
+      const setsStr = ex.repsS ? `С: ${ex.sets}×${ex.repsS} / Г: ${ex.sets}×${ex.reps}` : `${ex.sets}×${ex.reps}`;
       html += `
-        <div class="prog-exercise">
+        <div class="prog-ex">
           <div>
             <div class="prog-ex-name">${ex.name} ${tagHtml}</div>
-            <div class="prog-ex-sets">Отдых: ${formatTime(ex.rest)}</div>
+            ${altsHtml}
           </div>
-          <div class="prog-ex-right" style="color:var(--accent);font-weight:700;font-size:13px">${ex.sets}×${ex.reps}</div>
-        </div>
-      `;
+          <div class="prog-ex-sets">${setsStr}</div>
+        </div>`;
     });
+
     html += `</div></div>`;
   });
-  document.getElementById('program-content').innerHTML = html;
+
+  html += `
+    <div class="info-card">
+      <b>Периодизация</b><br>
+      4–6 нед силовой (3–6 повт) → 4–6 нед гипертрофия (8–12 повт) → 1 нед разгрузка (−30%)<br>
+      Главные упражнения: +2.5 кг когда выполнены все повторы в нижней границе
+    </div>
+    <div class="info-card">
+      <b style="color:var(--accent2)">⚠ Локоть:</b> нейтральный хват где возможно, избегай полного разгибания под нагрузкой, без боли<br><br>
+      <b style="color:var(--green)">✓ Таз:</b> Румынка, Dead Bug, ягодичный мостик выравнивают. Болгарский присед убирает асимметрию
+    </div>`;
+
+  $('program-content').innerHTML = html;
 }
 
 function toggleProgDay(i) {
-  const body = document.getElementById('progbody-' + i);
-  const chev = document.getElementById('progchev-' + i);
-  body.classList.toggle('open');
-  chev.classList.toggle('open');
+  $('progbody-' + i).classList.toggle('open');
+  $('progchev-' + i).classList.toggle('open');
 }
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // HISTORY PAGE
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function renderHistory() {
   const history = getHistory();
   if (!history.length) {
-    document.getElementById('history-content').innerHTML = `
-      <div class="empty-state">
-        <div class="emoji">📋</div>
-        <div>Здесь появятся твои тренировки</div>
-      </div>`;
+    $('history-content').innerHTML = `<div class="empty-state"><div class="emoji">📋</div><div>Здесь появятся твои тренировки</div></div>`;
     return;
   }
+  const phaseLabels = { strength: 'Сила', hypertrophy: 'Гипертрофия', deload: 'Разгрузка' };
+  const phaseBadge = { strength: 'badge-strength', hypertrophy: 'badge-hypertrophy', deload: 'badge-deload' };
   let html = '';
   history.forEach(entry => {
     const d = new Date(entry.date);
-    const dateStr = d.toLocaleDateString('ru', {day:'numeric', month:'long', weekday:'short'});
+    const dateStr = d.toLocaleDateString('ru', { day: 'numeric', month: 'long', weekday: 'short' });
+    const phaseHtml = entry.phase
+      ? `<span class="history-phase-badge ${phaseBadge[entry.phase] || ''}">${phaseLabels[entry.phase] || ''} ${entry.phaseWeek ? '·нед '+entry.phaseWeek : ''}</span>` : '';
     html += `
       <div class="history-item">
-        <div class="history-date">${dateStr}</div>
+        <div class="history-date">${dateStr} ${phaseHtml}</div>
         <div class="history-title">${entry.dayName}</div>
         <div class="history-stats">
           <div class="history-stat">Время <span>${entry.duration} мин</span></div>
           <div class="history-stat">Подходов <span>${entry.totalSets}</span></div>
-          <div class="history-stat">Объём <span>${entry.totalWeight} кг</span></div>
+          <div class="history-stat">Объём <span>${(entry.totalVol || 0).toLocaleString('ru')} кг</span></div>
         </div>
       </div>`;
   });
-  document.getElementById('history-content').innerHTML = html;
+  $('history-content').innerHTML = html;
 }
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
+// EXPORT / IMPORT
+// ════════════════════════════════════════════════════════
+function exportJSON() {
+  const data = {
+    version: 2,
+    exported: new Date().toISOString(),
+    history: getHistory(),
+    prs: getPRs(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `gym_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function handleImport(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.history) throw new Error('Неверный формат');
+      showConfirm(
+        'Импорт данных',
+        `Найдено ${data.history.length} тренировок. Добавить к существующим?`,
+        () => {
+          const existing = getHistory();
+          const existingDates = new Set(existing.map(h => h.date));
+          const newEntries = data.history.filter(h => !existingDates.has(h.date));
+          const merged = [...existing, ...newEntries].sort((a, b) => new Date(b.date) - new Date(a.date));
+          saveHistory(merged);
+          if (data.prs) {
+            const prs = getPRs();
+            Object.entries(data.prs).forEach(([k, v]) => {
+              if (!prs[k] || v.weight > prs[k].weight) prs[k] = v;
+            });
+            savePRs(prs);
+          }
+          renderHistory();
+          closeModal('confirmModal');
+        }
+      );
+    } catch { alert('Ошибка импорта: неверный формат файла'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+function showConfirm(title, text, onYes) {
+  $('confirm-title').textContent = title;
+  $('confirm-text').textContent = text;
+  $('confirm-yes').onclick = onYes;
+  $('confirmModal').classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════
 // PROGRESS PAGE
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 function renderProgress() {
-  const prs = getStorage('gym_prs', {});
+  const prs = getPRs();
   let prHtml = '';
-  if (Object.keys(prs).length === 0) {
-    prHtml = '<div style="color:var(--muted);font-size:13px;margin-bottom:16px">Рекорды появятся после первых тренировок</div>';
+  if (!Object.keys(prs).length) {
+    prHtml = '<div style="color:var(--muted);font-size:13px;margin-bottom:14px">Рекорды появятся после первых тренировок</div>';
   } else {
-    Object.entries(prs).forEach(([name, data]) => {
+    Object.entries(prs).sort((a, b) => b[1].weight - a[1].weight).forEach(([name, data]) => {
       prHtml += `
         <div class="pr-badge">
           <div>
             <div class="pr-name">${name}</div>
-            <div class="pr-date">${data.date}</div>
+            <div class="pr-sub">${data.date}</div>
           </div>
           <div class="pr-weight">${data.weight} кг</div>
         </div>`;
     });
   }
-  document.getElementById('pr-content').innerHTML = prHtml;
+  $('pr-content').innerHTML = prHtml;
 
-  // populate select
   const history = getHistory();
   const exNames = new Set();
-  history.forEach(entry => entry.exercises.forEach(ex => { if (ex.sets.length > 0) exNames.add(ex.name); }));
-  const sel = document.getElementById('progressSelect');
+  history.forEach(e => e.exercises.forEach(ex => { if (ex.sets.length) exNames.add(ex.name); }));
+  const sel = $('progressSelect');
   sel.innerHTML = [...exNames].map(n => `<option value="${n}">${n}</option>`).join('');
-  if (exNames.size > 0) renderChart();
+  if (exNames.size) renderChart();
 }
 
 function renderChart() {
   const history = getHistory();
-  const exName = document.getElementById('progressSelect').value;
+  const exName = $('progressSelect').value;
   const points = [];
   [...history].reverse().forEach(entry => {
     const ex = entry.exercises.find(e => e.name === exName);
-    if (ex && ex.sets.length > 0) {
+    if (ex && ex.sets.length) {
       const maxW = Math.max(...ex.sets.map(s => parseFloat(s.weight) || 0));
       if (maxW > 0) {
-        points.push({ date: new Date(entry.date).toLocaleDateString('ru',{day:'numeric',month:'short'}), weight: maxW });
+        const d = new Date(entry.date);
+        points.push({ label: `${d.getDate()}.${d.getMonth()+1}`, weight: maxW, phase: entry.phase });
       }
     }
   });
 
-  const canvas = document.getElementById('progressCanvas');
+  const canvas = $('progressCanvas');
   const ctx = canvas.getContext('2d');
   const dpr = window.devicePixelRatio || 1;
-  canvas.width = canvas.offsetWidth * dpr;
-  canvas.height = 180 * dpr;
+  const W = canvas.offsetWidth;
+  const H = 180;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
   ctx.scale(dpr, dpr);
-  const W = canvas.offsetWidth, H = 180;
-
   ctx.clearRect(0, 0, W, H);
 
   if (points.length < 2) {
     ctx.fillStyle = '#666';
-    ctx.font = '13px -apple-system, sans-serif';
+    ctx.font = '13px -apple-system,sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('Нужно минимум 2 записи для графика', W/2, H/2);
+    ctx.fillText('Нужно минимум 2 записи', W/2, H/2);
     return;
   }
 
-  const pad = { top: 20, right: 20, bottom: 30, left: 40 };
-  const gW = W - pad.left - pad.right;
-  const gH = H - pad.top - pad.bottom;
-  const minW = Math.min(...points.map(p => p.weight)) * 0.95;
-  const maxWt = Math.max(...points.map(p => p.weight)) * 1.05;
+  const pad = { t: 20, r: 16, b: 28, l: 38 };
+  const gW = W - pad.l - pad.r, gH = H - pad.t - pad.b;
+  const minW = Math.min(...points.map(p => p.weight)) * 0.97;
+  const maxW = Math.max(...points.map(p => p.weight)) * 1.03;
+  const px = i => pad.l + (i / (points.length - 1)) * gW;
+  const py = w => pad.t + gH - ((w - minW) / (maxW - minW || 1)) * gH;
 
-  const px = (i) => pad.left + (i / (points.length - 1)) * gW;
-  const py = (w) => pad.top + gH - ((w - minW) / (maxWt - minW)) * gH;
-
-  // gradient fill
-  const grad = ctx.createLinearGradient(0, pad.top, 0, pad.top + gH);
-  grad.addColorStop(0, 'rgba(232,255,71,0.3)');
+  // gradient
+  const grad = ctx.createLinearGradient(0, pad.t, 0, pad.t + gH);
+  grad.addColorStop(0, 'rgba(232,255,71,.25)');
   grad.addColorStop(1, 'rgba(232,255,71,0)');
   ctx.beginPath();
   ctx.moveTo(px(0), py(points[0].weight));
   points.forEach((p, i) => { if (i > 0) ctx.lineTo(px(i), py(p.weight)); });
-  ctx.lineTo(px(points.length-1), pad.top + gH);
-  ctx.lineTo(px(0), pad.top + gH);
+  ctx.lineTo(px(points.length-1), pad.t + gH);
+  ctx.lineTo(px(0), pad.t + gH);
   ctx.closePath();
   ctx.fillStyle = grad;
   ctx.fill();
@@ -679,31 +1046,28 @@ function renderChart() {
   // dots
   points.forEach((p, i) => {
     ctx.beginPath();
-    ctx.arc(px(i), py(p.weight), 4, 0, Math.PI*2);
-    ctx.fillStyle = '#e8ff47';
+    ctx.arc(px(i), py(p.weight), 3.5, 0, Math.PI*2);
+    ctx.fillStyle = p.phase === 'strength' ? '#e8ff47' : p.phase === 'deload' ? '#60a5fa' : '#ff6b35';
     ctx.fill();
   });
 
-  // labels
-  ctx.fillStyle = '#888';
-  ctx.font = `${11 * (1/dpr + 0.8)}px -apple-system, sans-serif`;
+  // x labels
+  ctx.fillStyle = '#666';
+  ctx.font = `11px -apple-system,sans-serif`;
   ctx.textAlign = 'center';
-  const step = Math.ceil(points.length / 5);
+  const step = Math.ceil(points.length / 6);
   points.forEach((p, i) => {
-    if (i % step === 0 || i === points.length - 1) {
-      ctx.fillText(p.date, px(i), H - 4);
-    }
+    if (i % step === 0 || i === points.length - 1) ctx.fillText(p.label, px(i), H - 6);
   });
+
+  // y labels
   ctx.textAlign = 'right';
-  ctx.fillStyle = '#888';
-  [minW, maxWt].forEach(w => {
-    ctx.fillText(w.toFixed(1), pad.left - 4, py(w) + 4);
-  });
+  [minW, maxW].forEach(w => ctx.fillText(w.toFixed(1), pad.l - 4, py(w) + 4));
 }
 
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════════
+// ════════════════════════════════════════════════════════
 initToday();
 renderProgram();
 </script>
