@@ -56,6 +56,12 @@ input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-
 .section-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;margin-top:4px}
 
 /* TODAY */
+.day-selector{display:flex;gap:6px;margin-top:12px}
+.day-sel-btn{flex:1;padding:8px 4px;border-radius:10px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.day-sel-btn.active-a{background:#e8ff4720;border-color:#e8ff4750;color:var(--accent)}
+.day-sel-btn.active-b{background:#ff6b3520;border-color:#ff6b3550;color:var(--accent2)}
+.day-sel-btn.active-c{background:#7c3aed20;border-color:#7c3aed50;color:var(--purple)}
+.day-sel-btn.active-d{background:#0ea5e920;border-color:#0ea5e950;color:#38bdf8}
 .day-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:4px 10px;border-radius:20px;margin-bottom:10px;margin-top:12px}
 .badge-a{background:#e8ff4720;color:var(--accent)}
 .badge-b{background:#ff6b3520;color:var(--accent2)}
@@ -210,6 +216,7 @@ canvas{width:100%!important;display:block}
   <div class="history-actions">
     <button class="action-btn" onclick="exportJSON()">📤 Экспорт</button>
     <button class="action-btn" onclick="document.getElementById('importInput').click()">📥 Импорт</button>
+    <button class="action-btn" style="color:var(--red);border-color:#f8717130" onclick="confirmClearHistory()">🗑</button>
   </div>
   <input type="file" id="importInput" accept=".json" style="display:none" onchange="handleImport(event)">
   <div id="history-content"></div>
@@ -484,6 +491,12 @@ function renderToday() {
   let phaseName = phase.isDeload ? 'РАЗГРУЗОЧНАЯ НЕДЕЛЯ' : (phase.type === 'strength' ? 'СИЛОВОЙ БЛОК' : 'ГИПЕРТРОФИЯ');
   let phaseReps = phase.isDeload ? '−30% от рабочих весов' : (phase.type === 'strength' ? 'Целевые: 4–6 повт' : 'Целевые: 8–12 повт');
 
+  const dayClasses = ['a','b','c','d'];
+  const daySelectorHtml = `<div class="day-selector">${PROGRAM.map((d,i) => {
+    const activeClass = i === session.dayIdx ? `active-${dayClasses[i]}` : '';
+    return `<button class="day-sel-btn ${activeClass}" onclick="switchDay(${i})">${d.id}</button>`;
+  }).join('')}</div>`;
+
   let html = `
     <div class="phase-banner ${phaseClass}" onclick="openPhaseModal()">
       <div>
@@ -494,6 +507,7 @@ function renderToday() {
         <div class="phase-reps">${phaseReps}</div>
       </div>
     </div>
+    ${daySelectorHtml}
     <div class="${day.badgeClass} day-badge">${day.id} · ${DAYS[now.getDay()]}, ${now.getDate()} ${MONTHS[now.getMonth()]}</div>
     <div class="workout-title">${day.name}</div>
     <div class="workout-sub">${day.focus}${day.optional ? ' (опциональный)' : ''}</div>
@@ -633,6 +647,31 @@ function finishWorkout() {
 function closeFinishModal() {
   closeModal('finishModal');
   initToday();
+}
+
+function switchDay(idx) {
+  session.dayIdx = idx;
+  session.selections = {};
+  session.sets = {};
+  session.startTime = Date.now();
+  const day = PROGRAM[idx];
+  day.exercises.forEach((ex, i) => {
+    session.sets[exSlotKey(i)] = Array.from({ length: ex.sets }, () => ({ weight: '', reps: '', done: false }));
+  });
+  renderToday();
+}
+
+function confirmClearHistory() {
+  showConfirm(
+    'Очистить историю?',
+    'Все тренировки и личные рекорды будут удалены. Это действие нельзя отменить.',
+    () => {
+      saveHistory([]);
+      savePRs({});
+      closeModal('confirmModal');
+      renderHistory();
+    }
+  );
 }
 
 function updatePRs(exercisesLog) {
